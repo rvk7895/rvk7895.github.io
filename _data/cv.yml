@@ -2,31 +2,33 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
+      value: Ritvik Aryan Kalra
     - name: Date of Birth
-      value: 14th March 1879
+      value: 15th January 2000
     - name: Languages
-      value: English, German
+      value: English, Hindi
 
 - title: Education
   type: time_table
   contents:
-    - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
+    - title: B.Tech. (Hons.)
+      institution: International Institute of Information Technology, Hyderabad
+      year: 2023
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
+        - 8.25 CG
+        - title: Relevant Courses
           contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
+          - Statistical Methods in Artificial Intelligence
+          - Introduction to Natural Language Processing
+          - Computer Vision
+          - Operating Systems
+          - Data Structures and Algorithms
+
+    - title: MS in Human Sciences and Computing by Research
+      institution: International Institue of Information Technology, Hyderabad
+      year: 2024
       description:
-        - Description 1.
-        - Description 2.
+        - Worked with <a href="https://sites.google.com/a/iith.ac.in/dr-nimmi-rangaswamy/">Dr. Nimmi Rangaswamy</a> in the field of Fairness in AI and Human-Computer Interaction
 
 - title: Experience
   type: time_table

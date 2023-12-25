@@ -1,12 +1,9 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - rvk7895
 
 github_repos:
-  - alshedivat/al-folio
-  - twbs/bootstrap
-  - jekyll/jekyll
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - jpswalsh/academicons
-  - mathjax/MathJax
+  - aravind-3105/Colorful-Image-Colorization
+  - rvk7895/EleAtt-RNN-for-Action-Classification
+  - rvk7895/RaSH
+  - rvk7895/Semantic-Textual-Similarity
+  - rvk7895/Neural-Language-Model-and-Machine-Translation
