@@ -31,7 +31,7 @@ Test test = new Test();
 test.seta1(1);
 ```
 
-This is the ********JavaBean******** pattern. But this strategy has its own disadvantages, first being that the object would be in an inconsistent state for sometime, and second being that it automatically precludes the possibility of the class being immutable.
+This is the **JavaBean** pattern. But this strategy has its own disadvantages, first being that the object would be in an inconsistent state for sometime, and second being that it automatically precludes the possibility of the class being immutable.
 
 Hence to cover for the advantages come builder classes. There syntax is as follows:
 
