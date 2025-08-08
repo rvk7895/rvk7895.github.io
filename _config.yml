@@ -6,14 +6,15 @@ title: Ritvik Aryan Kalra # the website title (if blank, full name will be used 
 first_name: Ritvik
 middle_name: Aryan
 last_name: Kalra
-email: ritvik.kalra@research.iiit.ac.in
+email: ritvik@sarvam.ai
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  I am a final year Computer Science student at IIIT Hyderabad. I learn, build and break things, definitely not in that order. Currently working as a Research Associate at PipableAI.
+  AI Engineer at Sarvam AI (Bengaluru). Dual Degree (B.Tech + MS by Research) in Computer Science from IIIT Hyderabad (8.29 CGPA).
+  I work across Generative AI and applied ML, and research/advocate for fairness in AI and HCI. Previously, Founding Engineer at Pipable AI.
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
   Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
   Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
-keywords: Fairness in Recommendation Algorithms, Large Language Models
+keywords: Algorithmic Fairness, Human-Computer Interaction, Generative AI, Large Language Models, Data Systems, Differential Privacy
 
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: ⚛️  # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
@@ -73,7 +74,7 @@ x_username: rkal4 # your X handle
 mastodon_username: # your mastodon instance+username in the format instance.tld/@username
 linkedin_username: rvk7895 # your LinkedIn user name
 telegram_username: # your Telegram user name
-scholar_userid: # your Google Scholar ID
+scholar_userid: h9dX9iwAAAAJ # your Google Scholar ID
 semanticscholar_id: # your Semantic Scholar ID
 whatsapp_number: # your WhatsApp number (full phone number in international format. Omit any zeroes, brackets, or dashes when adding the phone number in international format.)
 orcid_id: # your ORCID ID
@@ -85,18 +86,19 @@ osf_id: # your OSF ID
 research_gate_profile: # your profile on ResearchGate
 scopus_id: # your profile on Scopus
 blogger_url: # your blogger URL
-work_url: # work page URL
+work_url: https://www.sarvam.ai/about-us # work page URL
 keybase_username: # your keybase user name
 wikidata_id: # your wikidata id
 wikipedia_id: # your wikipedia id (Case sensitive)
 dblp_url: # your DBLP profile url
 stackoverflow_id: # your stackoverflow id
+stackoverflow_id: 14792496
 kaggle_id: # your kaggle id
 lastfm_id: # your lastfm id
 spotify_id: # your spotify id
 pinterest_id: # your pinterest id
 unsplash_id: # your unsplash id
-instagram_id: # your instagram id
+instagram_id: watermelon_pizza # your instagram id
 facebook_id: # your facebook id
 youtube_id: # your youtube channel id (youtube.com/@<youtube_id>)
 discord_id: # your discord id (18-digit unique numerical identifier)
@@ -104,7 +106,7 @@ zotero_username: # your zotero username
 wechat_qr: # filename of your wechat qr-code saved as an image (e.g., wechat-qr.png if saved to assets/img/wechat-qr.png)
 
 contact_note: >
-  You can even add a little note about which of these is the best way to reach you.
+  Best way to reach me: email. Open to collaborations in Generative AI and Responsible AI.
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
@@ -273,7 +275,7 @@ display_categories: # these categories will be displayed on the front page of yo
 scholar:
 
   last_name: [Kalra]
-  first_name: [Ritvk, R.]
+  first_name: [Ritvik, Ritvik Aryan, R.]
 
   style: apa
   locale: en
@@ -366,7 +368,7 @@ enable_math:                true   # enables math typesetting (uses MathJax)
 enable_tooltips:            false  # enables automatic tooltip links generated
                                    # for each section titles on pages and posts
 enable_darkmode:            true   # enables switching between light/dark modes
-enable_navbar_social:       false  # enables displaying social links in the
+enable_navbar_social:       true  # enables displaying social links in the
                                    # navbar on the about page
 enable_project_categories:  true   # enables categorization of projects into
                                    # multiple categories

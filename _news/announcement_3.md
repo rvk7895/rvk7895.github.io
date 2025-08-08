@@ -1,8 +1,9 @@
 ---
 layout: post
-date: 2016-01-15 07:59:00-0400
-inline: true
-related_posts: false
+title: "Joined Sarvam AI as AI Engineer"
+date: 2024-07-15 07:59:00-0400
+inline: false
+related_posts: true
 ---
 
-A simple inline announcement with Markdown emoji! :sparkles: :smile:
+Excited to share that I’ve joined Sarvam AI as an AI Engineer. Looking forward to building impactful generative AI systems for India and beyond.

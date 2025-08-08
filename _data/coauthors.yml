@@ -32,3 +32,15 @@
 "Planck":
   - firstname: ["Max"]
     url: https://en.wikipedia.org/wiki/Max_Planck
+
+"Gupta":
+  - firstname: ["Pratham"]
+    url: https://fairxiv.org/search?q=Pratham+Gupta
+
+"Varghese":
+  - firstname: ["Ben"]
+    url: https://fairxiv.org/search?q=Ben+Varghese
+
+"Rangaswamy":
+  - firstname: ["Nimmi"]
+    url: https://iiit.ac.in/publications/~nimmi.rangaswamy

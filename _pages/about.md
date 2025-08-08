@@ -3,7 +3,7 @@ layout: about
 title: about
 permalink: /
 # subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
-subtitle: 
+subtitle: AI Engineer at Sarvam AI · Previously Founding Engineer at Pipable AI · Fairness in AI & HCI
 
 profile:
   align: right
@@ -25,8 +25,19 @@ Link to your social media connections, too. This theme is set up to use [Font Aw
 
 Hi 👋
 
-I am a ML Engineer at Sarvam AI. I learn, build and break things, definitely not in that order.
+I’m an AI Engineer at Sarvam AI (Bengaluru). I learn, build and break things — not always in that order. I care about making AI systems fair, inclusive, and useful in the real world.
 
-I am interested in the field of Human Computer Interaction, more specifically in the domain of Fairness in AI deployed systems. I am also interested in the field of Natural Language Processing, and actively looking into the problem of Natural Language to SQL generation and LLM agents.
+My interests sit at the intersection of Human–Computer Interaction and Responsible/Trustworthy AI, with hands-on work in Generative AI and LLM agents (incl. NL→SQL and tool-using agents).
 
-Beyond this, you can probably find me jamming on my keytar, playing computer and board games, or just brewing a cup of coffee.
+Previously, I was a Founding Engineer at Pipable AI. I completed a Dual Degree (B.Tech + MS by Research) in Computer Science from IIIT Hyderabad (CGPA 8.29), where my research explored algorithmic fairness in deployed platforms.
+
+When I’m not shipping models or experiments, you’ll probably find me jamming on my keytar, playing computer/board games, or brewing a good cup of coffee.
+
+### Featured work
+
+- Bumble disparities study — fairness in recommendations
+  - /projects/bumble-disparities/
+- RaSH — minimal POSIX shell in C
+  - /projects/rash/
+- EleAtt-RNN — action classification
+  - /projects/eleatt-rnn/
