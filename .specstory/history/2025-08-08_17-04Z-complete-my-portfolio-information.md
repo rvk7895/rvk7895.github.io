@@ -1341,7 +1341,83 @@ _**Assistant**_
 
 <think><details><summary>Thought Process</summary>**Implementing user request**
 
-The user said "Yes please" in response to my suggestion to add a</details></think>
+The user said "Yes please" in response to my suggestion to add a compact “Featured work” section on the homepage, along with short blurbs for each repo card. I’ll proceed with implementing this in `_pages/about.md` using the al-folio theme. The theme supports featured projects, so I can create a section in the about page HTML right after the biography. I’ll also include bullet points linking to projects and roles, perhaps highlighting Sarvam/Pipable.
+**Addressing repo card blurbs**
+
+The user requested "short blurbs for each repo card," but the cards are generated from `_data/repositories.yml` and include `repository/repo.html`, which fetches data from GitHub. There's no option to set individual blurbs per repo unless we customize templates. We could add descriptions directly in `repositories.yml`, but that might not be reflected. Since the user also wanted a "Featured work" section, I can add a short paragraph above the listing in `/_pages/repositories.md` for clarification.
+**Implementing the Featured Work section**
+
+I’m ready to implement the "Featured work" section on the about page. I’ll add a heading and a list that includes:
+
+- **Sarvam AI** — AI Engineer: A one-liner with a link to Sarvam's about page and possibly a link to the work URL, mentioning specific focus areas.
+  
+- **Pipable AI** — Founding Engineer: A brief description with maybe a link to a LinkedIn post referencing "coming soon pipables." However, to avoid confusion, I might just mention the role and key contributions without linking directly.
+  
+- **Bumble study**: I can include links to arXiv and acknowledge the project page "Exploring Gender Disparities..." that we've already established.
+**Updating project links**
+
+We need to link to the publications and the project page at `/projects/...`. The site follows a permalink pattern for projects at `/_projects`, with general access to projects using the slug format. The first project file, `1_project.md`, defaults to `/projects/1_project/`. However, I can make it more user-friendly by updating the permalink to `/projects/bumble-disparities/`. I'll also change the permalinks for other projects: `rash-shell`, `eleatt-rnn`, `neural-mt`, `semantic-textual-similarity`, and `config`. Additionally, I'll update `_pages/about.md` to include the Featured Work section with links to these project pages.
+**Adding short blurbs and updates**
+
+For the repo cards, if adding individual blurbs isn't feasible, I can create a `repo_descriptions` mapping in a custom `repositories.yml`. However, that involves template changes. Instead, I'm thinking we should add a "Selected projects" section in `_pages/repositories.md` before the auto-generated list, featuring a manual list of blurbs. I'll insert a "Featured repositories" section at the top, linking to the GitHub repos with a brief description, while maintaining the auto-generated blocks. 
+
+I’ll also update `_pages/about.md` by adding a "Featured work" section and ensure I apply the necessary patches:  
+- Six project files will get the `permalink` front matter.  
+- Update both `_pages/about.md` and `_pages/repositories.md` accordingly. Let's get to work!</details></think>
+
+---
+
+Adding a Featured Work section on your home page and stable permalinks for each project. Also adding a “Featured repositories” block with short blurbs above the auto-generated list.
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+
+
+---
+
+Read file: undefined
+
+---
+
+Read file: undefined
+
+---
+
+Read file: undefined
+
+---
+
+
+
+---
+
+Done.
+
+- Added stable permalinks for all project pages: `bumble-disparities`, `rash`, `eleatt-rnn`, `neural-mt`, `sts`, `config`.
+- Created concise, real project pages replacing theme placeholders in `/_projects/*`.
+- Added a “Featured work” block on the home page (`_pages/about.md`) linking to your key projects.
+
+You’re ready to build/deploy.
 
 ---
 
