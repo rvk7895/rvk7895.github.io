@@ -983,8 +983,13 @@
     position: absolute; top: 0; width: 100vw;
     max-width: var(--maxw); padding: 0 40px;
   }
-  .curtain--l .curtain__inner { left: 50%; transform: translateX(-50%); }
-  .curtain--r .curtain__inner { right: 50%; transform: translateX(50%); }
+  /* Both clones must center on the VIEWPORT centre (50vw), not on each
+     half — otherwise the left/right curtains show the full content offset
+     to 25vw / 75vw and it reads as a doubled/ghosted flash. With both
+     centred at 50vw, each 50vw curtain clips to its half and they
+     reconstruct the page seamlessly, then slide apart. */
+  .curtain--l .curtain__inner { left: 100%; transform: translateX(-50%); }
+  .curtain--r .curtain__inner { left: 0;    transform: translateX(-50%); }
   @media (prefers-reduced-motion: no-preference) {
     .curtain { transition: transform var(--curtain-dur) var(--easeQuart),
                            filter 300ms var(--ease), opacity var(--curtain-dur) var(--easeQuart); }
