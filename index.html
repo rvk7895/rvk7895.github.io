@@ -968,37 +968,31 @@
   #glowPath { filter: url(#neon); }
 
   /* ============================================================
-     CURTAIN-PART REVEAL (CHANGE 5) — clones of the reading page
-     slide outward like stage doors, revealing the stage behind.
+     CURTAIN-PART REVEAL (CHANGE 5) — SOLID theater doors.
+     Two solid panels (paper-coloured) cover the viewport as the
+     lights dim, then slide apart to reveal the stage behind.
+     No page clone / no clip / no offset alignment — so it can never
+     ghost, double, or blank, and renders identically in every engine
+     (Chromium, WebKit/Safari, Firefox) at any scroll position.
      ============================================================ */
   .curtain {
     position: fixed; top: 0; bottom: 0; width: 50vw;
-    overflow: hidden; z-index: 8; background: var(--paper);
-    will-change: transform;
+    z-index: 8; background: var(--paper);
+    opacity: 0;                 /* fade in as the lights dim */
+    will-change: transform, opacity;
     pointer-events: none;
   }
   .curtain--l { left: 0; }
   .curtain--r { right: 0; }
-  .curtain__inner {
-    position: absolute; top: 0; width: 100vw;
-    max-width: var(--maxw); padding: 0 40px;
-  }
-  /* Both clones must center on the VIEWPORT centre (50vw), not on each
-     half — otherwise the left/right curtains show the full content offset
-     to 25vw / 75vw and it reads as a doubled/ghosted flash. With both
-     centred at 50vw, each 50vw curtain clips to its half and they
-     reconstruct the page seamlessly, then slide apart. */
-  .curtain--l .curtain__inner { left: 100%; transform: translateX(-50%); }
-  .curtain--r .curtain__inner { left: 0;    transform: translateX(-50%); }
   @media (prefers-reduced-motion: no-preference) {
     .curtain { transition: transform var(--curtain-dur) var(--easeQuart),
-                           filter 300ms var(--ease), opacity var(--curtain-dur) var(--easeQuart); }
+                           opacity 260ms var(--ease); }
   }
-  /* lights dim: desaturate + darken the curtains before they part */
-  body.curtain-dim .curtain { filter: brightness(0.42) saturate(0.5); }
-  /* part: slide the two halves outward */
-  body.curtain-part .curtain--l { transform: translateX(-100%); opacity: 0.85; }
-  body.curtain-part .curtain--r { transform: translateX(100%); opacity: 0.85; }
+  /* lights dim: the doors close over the page */
+  body.curtain-dim .curtain { opacity: 1; }
+  /* part: slide the two solid doors outward, revealing the stage */
+  body.curtain-part .curtain--l { transform: translateX(-100%); }
+  body.curtain-part .curtain--r { transform: translateX(100%); }
   /* a thin seam light down the parting center */
   .seamlight {
     position: fixed; top: 0; bottom: 0; left: 50%; width: 2px;
@@ -2268,21 +2262,11 @@
   var curtainL = null, curtainR = null, seamlight = null;
   function buildCurtains() {
     teardownCurtains();
-    var rect = reading.getBoundingClientRect();
-    var topY = rect.top + window.scrollY; /* content offset from doc top */
+    /* SOLID doors — just two paper-coloured panels, no page clone.
+       Robust in every browser and at any scroll position. */
     function makeCurtain(side) {
       var c = document.createElement("div");
       c.className = "curtain curtain--" + side;
-      var inner = document.createElement("div");
-      inner.className = "curtain__inner";
-      inner.style.top = (-window.scrollY + 0) + "px"; /* align clone to current viewport */
-      var clone = reading.cloneNode(true);
-      clone.removeAttribute("id");
-      clone.style.margin = "0 auto";
-      /* clear ids in clone to avoid duplicates driving the engine */
-      Array.prototype.slice.call(clone.querySelectorAll("[id]")).forEach(function (e) { e.removeAttribute("id"); });
-      inner.appendChild(clone);
-      c.appendChild(inner);
       document.body.appendChild(c);
       return c;
     }
