@@ -1784,6 +1784,13 @@
 (function () {
   "use strict";
 
+  /* Always open at the top (the hero), never a browser-restored mid-page
+     position — otherwise a reload can land on the Training section and its
+     "loss" curve draws on load, reading as a graph flashing in. */
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+  if (!location.hash) { try { window.scrollTo(0, 0); } catch (e) {} }
+  window.addEventListener("load", function () { if (!location.hash) window.scrollTo(0, 0); });
+
   var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function isMobile() { return window.matchMedia && window.matchMedia("(max-width: 700px)").matches; }
   var SVGNS = "http://www.w3.org/2000/svg";
