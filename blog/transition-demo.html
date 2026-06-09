@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scene change demo — Home ↔ Training Logs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script>
+/* FOUC-safe theme: set data-theme before first paint. Same key + list as the home (9-run-mode). */
+(function () {
+  try {
+    var t = localStorage.getItem("poster-theme");
+    if (t !== "house" && t !== "signal") t = "house"; /* dark default; legacy values → dark */
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "house");
+  }
+})();
+</script>
+<style>
+  /* ============================================================
+     SCENE CHANGE DEMO — home ↔ training-logs
+     Proves the proscenium model: the masthead + theme switcher are
+     FIXED (never move); only the stage content slides. Going to logs,
+     both home "door" panels slide left off-stage AS ONE UNIT while the
+     logs panel slides in from the right. "← THE RUN" reverses it.
+     ~600ms easeInOutQuart = cubic-bezier(0.76,0,0.24,1).
+     ============================================================ */
+
+  /* ---------- THEME TOKENS (verbatim from 9) ---------- */
+  html[data-theme="house"] {
+    --paper:#0e0e10; --paper-2:#121214; --card:#131316;
+    --ink:#ececea; --ink-soft:#c2c2bf; --ink-faint:#8e8e8c; --ink-ghost:#5d5d5c;
+    --rule:#ececea; --rule-soft:#2a2a2e;
+    --accent:#ff2d52; --accent-deep:#e4002b; --accent-ink:#0e0e10; --accent-wash:#ff2d521f;
+    --door-a:#121214; --door-b:#17171a;
+  }
+  html[data-theme="signal"] {
+    --paper:#ffffff; --paper-2:#fafafa; --card:#ffffff;
+    --ink:#0d0d0d; --ink-soft:#3a3a3a; --ink-faint:#6f6f6f; --ink-ghost:#9c9c9c;
+    --rule:#0d0d0d; --rule-soft:#dcdcdc;
+    --accent:#e4002b; --accent-deep:#b80022; --accent-ink:#ffffff; --accent-wash:#e4002b14;
+    --door-a:#fafafa; --door-b:#f1f1f1;
+  }
+  html[data-theme="oxblood"] {
+    --paper:#f6f3ee; --paper-2:#efeae1; --card:#fbf9f5;
+    --ink:#1a1714; --ink-soft:#423c35; --ink-faint:#6c655b; --ink-ghost:#9b9387;
+    --rule:#1a1714; --rule-soft:#ddd6c9;
+    --accent:#7c2230; --accent-deep:#5f1924; --accent-ink:#f6f3ee; --accent-wash:#7c223014;
+    --door-a:#efeae1; --door-b:#e6e0d5;
+  }
+  html[data-theme="ink"] {
+    --paper:#fbfcfe; --paper-2:#f1f4fa; --card:#ffffff;
+    --ink:#11151f; --ink-soft:#353c4c; --ink-faint:#67708a; --ink-ghost:#9aa2b6;
+    --rule:#11151f; --rule-soft:#dde2ee;
+    --accent:#1d2f7a; --accent-deep:#142158; --accent-ink:#fbfcfe; --accent-wash:#1d2f7a12;
+    --door-a:#f1f4fa; --door-b:#e6ecf7;
+  }
+  html[data-theme="graphite"] {
+    --paper:#ffffff; --paper-2:#f3f3f3; --card:#ffffff;
+    --ink:#141414; --ink-soft:#3c3c3c; --ink-faint:#707070; --ink-ghost:#9c9c9c;
+    --rule:#141414; --rule-soft:#dcdcdc;
+    --accent:#141414; --accent-deep:#000000; --accent-ink:#ffffff; --accent-wash:#1414140d;
+    --door-a:#f3f3f3; --door-b:#eaeaea;
+  }
+
+  :root {
+    --display:"Archivo", system-ui, "Segoe UI", sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+    --hair:1px;
+    --scene-ease:cubic-bezier(0.76,0,0.24,1);   /* easeInOutQuart */
+    --scene-dur:600ms;
+  }
+
+  * { box-sizing:border-box; }
+  html, body {
+    margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+    background:var(--paper); color:var(--ink); font-family:var(--display);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  ::selection { background:var(--accent); color:var(--accent-ink); }
+
+  .shell { display:grid; grid-template-rows:auto 1fr; height:100vh; }
+
+  /* ============================================================
+     MASTHEAD (proscenium — FIXED, never participates in the slide)
+     ============================================================ */
+  .mast {
+    border-bottom:2px solid var(--rule); background:var(--paper);
+    padding:14px 28px; display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:24px;
+    z-index:10;
+  }
+  .mast__l { display:flex; align-items:baseline; gap:18px; flex-wrap:wrap; min-width:0; }
+  .name {
+    font-family:var(--display); font-weight:800; font-size:22px; line-height:1;
+    letter-spacing:-0.03em; text-transform:uppercase; margin:0; color:var(--ink); white-space:nowrap;
+  }
+  .mast__kick {
+    font-family:var(--mono); font-size:9px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--ink-faint); margin:0;
+  }
+  .mast__nav { display:flex; align-items:center; gap:14px; }
+  .navlink {
+    font-family:var(--mono); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; font-weight:600;
+    color:var(--ink-soft); background:none; border:var(--hair) solid var(--rule-soft);
+    padding:7px 13px; cursor:pointer; text-decoration:none;
+    transition:background 200ms var(--scene-ease), color 200ms var(--scene-ease), border-color 200ms var(--scene-ease);
+  }
+  .navlink:hover { color:var(--accent); border-color:var(--accent); }
+  .navlink.active { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .navlink[disabled] { opacity:0.4; cursor:default; pointer-events:none; }
+
+  /* ============================================================
+     STAGE — the only thing that moves; clips its content
+     ============================================================ */
+  .stage { position:relative; overflow:hidden; background:var(--paper); }
+
+  /* a scene fills the stage and is absolutely positioned so two can coexist mid-slide */
+  .scene {
+    position:absolute; inset:0; width:100%; height:100%;
+    transition:transform var(--scene-dur) var(--scene-ease);
+    will-change:transform;
+  }
+
+  /* HOME scene = the two-door wrapper (both doors translate AS ONE UNIT) */
+  #sceneHome { transform:translateX(0); display:grid; grid-template-columns:1fr 1fr; }
+  /* LOGS scene starts fully off-stage to the right */
+  #sceneLogs { transform:translateX(100%); }
+
+  /* state: logs visible → home slid left, logs slid to center */
+  .stage.at-logs #sceneHome { transform:translateX(-100%); }
+  .stage.at-logs #sceneLogs { transform:translateX(0); }
+
+  /* ---------------- the two doors ---------------- */
+  .door {
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 6vw; position:relative;
+  }
+  .door--a { background:var(--door-a); border-right:var(--hair) solid var(--rule); }
+  .door--b { background:var(--door-b); }
+  .door__no {
+    font-family:var(--mono); font-size:11px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 14px;
+  }
+  .door__title {
+    font-family:var(--display); font-weight:800; font-size:clamp(28px,4.2vw,52px); line-height:0.95;
+    letter-spacing:-0.03em; text-transform:uppercase; margin:0 0 14px; color:var(--ink);
+  }
+  .door__sub { font-size:14px; line-height:1.5; color:var(--ink-soft); margin:0; max-width:30ch; }
+  .door__tag {
+    display:inline-block; margin-top:18px;
+    font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
+    border:var(--hair) solid var(--rule-soft); padding:4px 10px; color:var(--ink-faint);
+  }
+
+  /* ---------------- the logs scene (simplified rows) ---------------- */
+  #sceneLogs { background:var(--paper); padding:5vh 6vw; overflow:hidden; }
+  .logs__head {
+    display:flex; align-items:flex-end; justify-content:space-between;
+    border-bottom:2px solid var(--rule); padding-bottom:12px; margin-bottom:18px;
+  }
+  .logs__h {
+    font-family:var(--display); font-weight:800; font-size:clamp(26px,3.6vw,44px); line-height:0.95;
+    letter-spacing:-0.03em; text-transform:uppercase; margin:0; color:var(--ink);
+  }
+  .logs__meta { font-family:var(--mono); font-size:11px; color:var(--ink-faint); }
+  .logrow {
+    display:grid; grid-template-columns:auto 1fr auto; column-gap:24px; align-items:baseline;
+    padding:14px 4px; border-bottom:var(--hair) solid var(--rule-soft);
+  }
+  .logrow__id { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--accent); }
+  .logrow__t { font-family:var(--display); font-weight:700; font-size:17px; letter-spacing:-0.015em; color:var(--ink); }
+  .logrow__d { font-family:var(--mono); font-size:10px; color:var(--ink-faint); white-space:nowrap; }
+
+  /* ============================================================
+     THEME SWITCHER (proscenium — fixed, never moves)
+     ============================================================ */
+  .themes {
+    position:fixed; right:14px; bottom:14px; z-index:40;
+    display:flex; gap:6px; align-items:center;
+    background:var(--paper); border:var(--hair) solid var(--rule); padding:6px 8px;
+  }
+  .themes__lab { font-family:var(--mono); font-size:8px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-faint); margin-right:2px; }
+  .sw { width:16px; height:16px; border:var(--hair) solid var(--rule); cursor:pointer; padding:0; }
+  .sw[aria-pressed="true"] { outline:2px solid var(--ink); outline-offset:1px; }
+  .sw--house { background:#0e0e10; box-shadow: inset 0 0 0 1.5px #ff2d52; }
+  .sw--signal { background:#e4002b; } .sw--oxblood { background:#7c2230; }
+  .lights {
+    position: fixed; right: 14px; bottom: 14px; z-index: 60;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 600;
+    color: var(--ink-soft); background: var(--paper);
+    border: var(--hair) solid var(--rule); cursor: pointer;
+    padding: 8px 12px;
+  }
+  .lights:hover { color: var(--accent); border-color: var(--accent); }
+  .lights .bulb { font-size: 13px; line-height: 1; }
+  .lights .l-dark, html[data-theme="house"] .lights .l-light { display: none; }
+  html[data-theme="house"] .lights .l-dark { display: inline; }
+  .sw--ink { background:#1d2f7a; } .sw--graphite { background:#141414; }
+
+  /* status chip (which scene we're on) */
+  .scenechip {
+    position:fixed; left:14px; bottom:14px; z-index:40;
+    font-family:var(--mono); font-size:9px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-faint); background:var(--paper); border:var(--hair) solid var(--rule-soft); padding:6px 10px;
+  }
+  .scenechip b { color:var(--accent); }
+
+  /* ============================================================
+     REDUCED MOTION — scenes snap instantly, no slide
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .scene { transition:none !important; }
+    .navlink { transition:none !important; }
+  }
+
+  /* ============================================================
+     MOBILE (≤700px) — doors stack vertically; slide still works
+     ============================================================ */
+  @media (max-width: 700px) {
+    .mast { grid-template-columns:1fr; row-gap:10px; padding:12px 16px; }
+    .mast__nav { justify-content:flex-start; }
+    #sceneHome { grid-template-columns:1fr; grid-template-rows:1fr 1fr; }
+    .door--a { border-right:none; border-bottom:var(--hair) solid var(--rule); }
+    .door { padding:5vh 8vw; justify-content:center; }
+    #sceneLogs { padding:4vh 6vw; }
+    .logrow { grid-template-columns:auto 1fr; column-gap:14px; }
+    .logrow__d { display:none; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- ===================== MASTHEAD (fixed proscenium) ===================== -->
+    <header class="mast">
+      <div class="mast__l">
+        <h1 class="name">Ritvik Aryan Kalra</h1>
+        <p class="mast__kick">scene-change demo · the proscenium never moves</p>
+      </div>
+      <nav class="mast__nav">
+        <button class="navlink active" id="navRun" type="button">← The Run</button>
+        <button class="navlink" id="navLogs" type="button">Logs →</button>
+      </nav>
+    </header>
+
+    <!-- ===================== STAGE (the only moving part) ===================== -->
+    <div class="stage" id="stage">
+
+      <!-- HOME scene: two doors in ONE wrapper → they slide as a single unit -->
+      <div class="scene" id="sceneHome" aria-label="Home — the run">
+        <section class="door door--a">
+          <p class="door__no">door 01 / explore</p>
+          <h2 class="door__title">The Run</h2>
+          <p class="door__sub">Read the career as one training run — reward climbs from a noisy warmup to a stable plateau.</p>
+          <span class="door__tag">free explore</span>
+        </section>
+        <section class="door door--b">
+          <p class="door__no">door 02 / replay</p>
+          <h2 class="door__title">Replay</h2>
+          <p class="door__sub">Opt-in guided walk through six milestones, the spotlight stepping across the stack.</p>
+          <span class="door__tag">guided replay</span>
+        </section>
+      </div>
+
+      <!-- LOGS scene: starts off-stage right, slides in -->
+      <div class="scene" id="sceneLogs" aria-label="Training Logs">
+        <div class="logs__head">
+          <h2 class="logs__h">Training Logs</h2>
+          <span class="logs__meta">18 entries · RSS</span>
+        </div>
+        <div class="logrow"><span class="logrow__id">e018</span><span class="logrow__t">Auditing 10,000s of reward verifiers</span><span class="logrow__d">jun 2026 · 12 min</span></div>
+        <div class="logrow"><span class="logrow__id">e017</span><span class="logrow__t">Scaling Firecracker to 1000s of microVMs</span><span class="logrow__d">may 2026 · 9 min</span></div>
+        <div class="logrow"><span class="logrow__id">e016</span><span class="logrow__t">GEPA on live traffic</span><span class="logrow__d">feb 2026 · 10 min</span></div>
+        <div class="logrow"><span class="logrow__id">e015</span><span class="logrow__t">Repo → RL environment pipeline</span><span class="logrow__d">nov 2025 · 8 min</span></div>
+        <div class="logrow"><span class="logrow__id">e014</span><span class="logrow__t">What 2-digit gains actually took</span><span class="logrow__d">sep 2025 · 11 min</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== THEME SWITCHER (fixed proscenium) ===================== -->
+  <button class="lights" id="lightsBtn" type="button" aria-label="Toggle light and dark mode">
+    <span class="l-dark"><span class="bulb">◯</span> lights up</span>
+    <span class="l-light"><span class="bulb">●</span> lights down</span>
+  </button>
+  <div class="scenechip" id="sceneChip">scene · <b id="sceneName">the run</b></div>
+
+<script>
+(function () {
+  "use strict";
+  var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- theme switcher (same key + applyTheme as the home) ---------- */
+  /* lights toggle: dark = house, light = signal */
+  function applyTheme(name) {
+    if (name !== "house" && name !== "signal") name = "house";
+    document.documentElement.setAttribute("data-theme", name);
+    try { localStorage.setItem("poster-theme", name); } catch (e) {}
+  }
+  var lightsBtn = document.getElementById("lightsBtn");
+  if (lightsBtn) {
+    lightsBtn.addEventListener("click", function () {
+      applyTheme(document.documentElement.getAttribute("data-theme") === "house" ? "signal" : "house");
+    });
+  }
+  applyTheme(document.documentElement.getAttribute("data-theme") || "house");
+
+  /* ============================================================
+     SCENE STATE MACHINE — two states: "run" and "logs"
+     The transform is driven purely by the .at-logs class on .stage;
+     during a slide both scenes are on-stage (one entering, one exiting).
+     ============================================================ */
+  var stage = document.getElementById("stage");
+  var navRun = document.getElementById("navRun");
+  var navLogs = document.getElementById("navLogs");
+  var sceneName = document.getElementById("sceneName");
+  var sceneHome = document.getElementById("sceneHome");
+  var sceneLogs = document.getElementById("sceneLogs");
+
+  var state = "run";       /* "run" | "logs" */
+  var animating = false;
+
+  function setNav() {
+    var atLogs = state === "logs";
+    navRun.classList.toggle("active", !atLogs);
+    navLogs.classList.toggle("active", atLogs);
+    navRun.disabled = !atLogs && !animating ? false : navRun.disabled; /* keep usable */
+    sceneName.textContent = atLogs ? "training logs" : "the run";
+    sceneHome.setAttribute("aria-hidden", atLogs ? "true" : "false");
+    sceneLogs.setAttribute("aria-hidden", atLogs ? "false" : "true");
+  }
+
+  function go(target) {
+    if (target === state || animating) return;
+    state = target;
+    if (REDUCED) {
+      /* snap, no slide */
+      stage.classList.toggle("at-logs", state === "logs");
+      setNav();
+      return;
+    }
+    animating = true;
+    /* lock buttons during the slide to avoid mid-flight re-trigger */
+    navRun.disabled = true; navLogs.disabled = true;
+    stage.classList.toggle("at-logs", state === "logs");
+    setNav();
+    var done = function () {
+      animating = false;
+      navRun.disabled = false; navLogs.disabled = false;
+      setNav();
+    };
+    /* listen on whichever scene is entering */
+    var entering = state === "logs" ? sceneLogs : sceneHome;
+    var fired = false;
+    entering.addEventListener("transitionend", function te(e) {
+      if (e.propertyName !== "transform") return;
+      entering.removeEventListener("transitionend", te);
+      fired = true; done();
+    });
+    /* safety net if transitionend doesn't fire */
+    setTimeout(function () { if (!fired) done(); }, 720);
+  }
+
+  navLogs.addEventListener("click", function () { go("logs"); });
+  navRun.addEventListener("click", function () { go("run"); });
+
+  /* keyboard: ← / → walk between scenes */
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { e.preventDefault(); go("logs"); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); go("run"); }
+  });
+
+  setNav();
+
+  /* ============================================================
+     INTROSPECTION API (headless verification)
+     ============================================================ */
+  window.__demo = {
+    state: function () { return state; },
+    animating: function () { return animating; },
+    goLogs: function () { go("logs"); },
+    goRun: function () { go("run"); },
+    atLogsClass: function () { return stage.classList.contains("at-logs"); },
+    homeTx: function () { return getComputedStyle(sceneHome).transform; },
+    logsTx: function () { return getComputedStyle(sceneLogs).transform; },
+    mastTop: function () { return Math.round(document.querySelector(".mast").getBoundingClientRect().top); },
+    themesTop: function () { return Math.round(document.querySelector(".themes").getBoundingClientRect().top); },
+    theme: function () { return document.documentElement.getAttribute("data-theme"); },
+    reduced: REDUCED
+  };
+})();
+</script>
+</body>
+</html>

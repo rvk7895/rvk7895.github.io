@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://rvk7895.github.io/sitemap.xml
