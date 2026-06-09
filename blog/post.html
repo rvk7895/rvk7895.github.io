@@ -8,14 +8,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <script>
-/* FOUC-safe theme: set data-theme before first paint. Same key + list as the home (9-run-mode). */
+/* FOUC-safe theme + accent: set data-theme and data-accent before first paint.
+   Same keys + lists as the home (15-current-work): shared localStorage. */
 (function () {
+  var ACCENTS = ["signal", "ember", "cobalt", "ion", "phosphor"];
   try {
     var t = localStorage.getItem("poster-theme");
     if (t !== "house" && t !== "signal") t = "house"; /* dark default; legacy values → dark */
     document.documentElement.setAttribute("data-theme", t);
+    var a = localStorage.getItem("poster-accent");
+    if (ACCENTS.indexOf(a) === -1) a = "cobalt"; /* electric blue is the default accent */
+    document.documentElement.setAttribute("data-accent", a);
   } catch (e) {
     document.documentElement.setAttribute("data-theme", "house");
+    document.documentElement.setAttribute("data-accent", "cobalt");
   }
 })();
 </script>
@@ -28,22 +34,127 @@
      ============================================================ */
 
   /* ---------- THEME TOKENS (verbatim from 9; + terminal panel tokens) --- */
+  /* STRUCTURAL tokens (NON-accent): driven by the light/dark lights axis
+     only. Accent-derived tokens live in the ACCENT AXIS blocks below
+     (html[data-accent="…"]) so the post re-tints with the swatch picker.
+     NOTE: --term-accent stays structural — the terminal panel is always
+     dark and is intentionally NOT re-tinted by the accent (matches home). */
   html[data-theme="house"] {
     /* house lights — dark default, shared with the home */
     --paper:#0e0e10; --paper-2:#121214; --card:#131316;
     --ink:#ececea; --ink-soft:#c2c2bf; --ink-faint:#8e8e8c; --ink-ghost:#5d5d5c;
     --rule:#ececea; --rule-soft:#2a2a2e;
-    --accent:#ff2d52; --accent-deep:#e4002b; --accent-ink:#0e0e10; --accent-wash:#ff2d521f;
-    --curve:#ff2d52; --selbg:#ff2d52; --selfg:#0e0e10;
     --term-bg:#070709; --term-ink:#f2f2f2; --term-dim:#8e8e8c; --term-rule:#26262a; --term-accent:#ff5d73;
   }
   html[data-theme="signal"] {
     --paper:#ffffff; --paper-2:#fafafa; --card:#ffffff;
     --ink:#0d0d0d; --ink-soft:#3a3a3a; --ink-faint:#6f6f6f; --ink-ghost:#9c9c9c;
     --rule:#0d0d0d; --rule-soft:#dcdcdc;
-    --accent:#e4002b; --accent-deep:#b80022; --accent-ink:#ffffff; --accent-wash:#e4002b14;
-    --curve:#e4002b; --selbg:#e4002b; --selfg:#ffffff;
     --term-bg:#141414; --term-ink:#f2f2f2; --term-dim:#9c9c9c; --term-rule:#2c2c2c; --term-accent:#ff5d73;
+  }
+
+  /* ============================================================
+     ACCENT AXIS — 2nd independent axis. data-accent on <html> selects
+     the hue. DARK (house) values are the base; LIGHT (signal) gets
+     per-accent overrides via html[data-theme="signal"][data-accent="…"].
+     Copied verbatim from 15-current-work so the swatch carries across.
+     The post consumes: --accent --accent-deep --accent-ink --accent-wash
+     --curve --selbg --selfg. Extra tokens are harmless.
+     ============================================================ */
+  /* ---- 1 · SIGNAL — refined deeper vermillion/crimson --------- */
+  html[data-accent="signal"] {            /* dark / house base */
+    --accent:     #f04658;
+    --accent-deep:#d8333f;
+    --accent-ink: #16080a;
+    --accent-wash:rgba(240, 70, 88, 0.16);
+    --curve:      #f04658;
+    --selbg:      #f04658;
+    --selfg:      #16080a;
+  }
+  html[data-theme="signal"][data-accent="signal"] {   /* light */
+    --accent:     #d83a4a;
+    --accent-deep:#b3222f;
+    --accent-ink: #ffffff;
+    --accent-wash:rgba(216, 58, 74, 0.12);
+    --curve:      #d83a4a;
+    --selbg:      #d83a4a;
+    --selfg:      #ffffff;
+  }
+  /* ---- 2 · EMBER — warm amber / gold ------------------------- */
+  html[data-accent="ember"] {             /* dark / house base */
+    --accent:     #f0a23a;
+    --accent-deep:#d9851c;
+    --accent-ink: #1a1205;
+    --accent-wash:rgba(240, 162, 58, 0.15);
+    --curve:      #f0a23a;
+    --selbg:      #f0a23a;
+    --selfg:      #1a1205;
+  }
+  html[data-theme="signal"][data-accent="ember"] {    /* light */
+    --accent:     #9c5e00;
+    --accent-deep:#7d4a00;
+    --accent-ink: #ffffff;
+    --accent-wash:rgba(156, 94, 0, 0.12);
+    --curve:      #9c5e00;
+    --selbg:      #9c5e00;
+    --selfg:      #ffffff;
+  }
+  /* ---- 3 · COBALT — clean electric blue (default) ------------ */
+  html[data-accent="cobalt"] {            /* dark / house base */
+    --accent:     #5b8cff;
+    --accent-deep:#3f6fe0;
+    --accent-ink: #060a18;
+    --accent-wash:rgba(91, 140, 255, 0.16);
+    --curve:      #5b8cff;
+    --selbg:      #5b8cff;
+    --selfg:      #060a18;
+  }
+  html[data-theme="signal"][data-accent="cobalt"] {   /* light */
+    --accent:     #2f5fd6;
+    --accent-deep:#2148b0;
+    --accent-ink: #ffffff;
+    --accent-wash:rgba(47, 95, 214, 0.12);
+    --curve:      #2f5fd6;
+    --selbg:      #2f5fd6;
+    --selfg:      #ffffff;
+  }
+  /* ---- 4 · ION — cool teal / cyan ---------------------------- */
+  html[data-accent="ion"] {               /* dark / house base */
+    --accent:     #2dd4bf;
+    --accent-deep:#14b8a6;
+    --accent-ink: #04130f;
+    --accent-wash:rgba(45, 212, 191, 0.15);
+    --curve:      #2dd4bf;
+    --selbg:      #2dd4bf;
+    --selfg:      #04130f;
+  }
+  html[data-theme="signal"][data-accent="ion"] {      /* light */
+    --accent:     #0c7d70;
+    --accent-deep:#09635a;
+    --accent-ink: #ffffff;
+    --accent-wash:rgba(12, 125, 112, 0.12);
+    --curve:      #0c7d70;
+    --selbg:      #0c7d70;
+    --selfg:      #ffffff;
+  }
+  /* ---- 5 · PHOSPHOR — muted terminal green ------------------- */
+  html[data-accent="phosphor"] {          /* dark / house base */
+    --accent:     #3ecf8e;
+    --accent-deep:#22b073;
+    --accent-ink: #04120b;
+    --accent-wash:rgba(62, 207, 142, 0.15);
+    --curve:      #3ecf8e;
+    --selbg:      #3ecf8e;
+    --selfg:      #04120b;
+  }
+  html[data-theme="signal"][data-accent="phosphor"] { /* light */
+    --accent:     #0d7d50;
+    --accent-deep:#0a6340;
+    --accent-ink: #ffffff;
+    --accent-wash:rgba(13, 125, 80, 0.12);
+    --curve:      #0d7d50;
+    --selbg:      #0d7d50;
+    --selfg:      #ffffff;
   }
   html[data-theme="oxblood"] {
     --paper:#f6f3ee; --paper-2:#efeae1; --card:#fbf9f5;
@@ -369,6 +480,50 @@
   .sw--ink { background:#1d2f7a; } .sw--graphite { background:#141414; }
 
   /* ============================================================
+     ACCENT PICKER — swatch row (2nd axis), anchored bottom-left so it
+     never collides with the lights toggle (bottom-right). Ported from
+     15-current-work; shares localStorage "poster-accent".
+     ============================================================ */
+  .accents {
+    position: fixed; left: 14px; bottom: 14px; z-index: 60;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--paper); border: var(--hair) solid var(--rule);
+    padding: 6px 9px;
+  }
+  .accents__lab {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 600; color: var(--ink-faint);
+    margin-right: 1px;
+  }
+  .accents__row { display: inline-flex; align-items: center; gap: 6px; }
+  .accsw {
+    width: 16px; height: 16px; border-radius: 50%; padding: 0; cursor: pointer;
+    border: var(--hair) solid var(--rule-soft);
+    background: var(--sw); position: relative;
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .accsw:hover { transform: scale(1.12); }
+  .accsw:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .accsw[aria-pressed="true"] {
+    box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--sw);
+  }
+  /* per-swatch hues — independent of the live theme (use dark-mode tints) */
+  .accsw--signal   { --sw: #f04658; }
+  .accsw--ember    { --sw: #f0a23a; }
+  .accsw--cobalt   { --sw: #5b8cff; }
+  .accsw--ion      { --sw: #2dd4bf; }
+  .accsw--phosphor { --sw: #3ecf8e; }
+  @media (prefers-reduced-motion: reduce) {
+    .accsw { transition: none !important; }
+  }
+  @media (max-width: 700px) {
+    /* stack the picker above the lights toggle on the right edge so
+       neither overlaps page content along the bottom */
+    .accents { left: auto; right: 14px; bottom: 54px; }
+    .accents__lab { display: none; }
+  }
+
+  /* ============================================================
      VIEW TRANSITION (progressive enhancement; JS fallback on file://)
      ============================================================ */
   @view-transition { navigation: auto; }
@@ -463,6 +618,18 @@
     <span class="l-light"><span class="bulb">●</span> lights down</span>
   </button>
 
+  <!-- ===================== ACCENT PICKER ===================== -->
+  <div class="accents" id="accents" role="group" aria-label="Accent color">
+    <span class="accents__lab">accent</span>
+    <div class="accents__row">
+      <button class="accsw accsw--signal"   type="button" data-accent="signal"   title="Signal — refined red"   aria-label="Signal accent (refined red)"></button>
+      <button class="accsw accsw--ember"    type="button" data-accent="ember"    title="Ember — warm amber"     aria-label="Ember accent (warm amber)"></button>
+      <button class="accsw accsw--cobalt"   type="button" data-accent="cobalt"   title="Cobalt — electric blue" aria-label="Cobalt accent (electric blue)"></button>
+      <button class="accsw accsw--ion"      type="button" data-accent="ion"      title="Ion — teal cyan"        aria-label="Ion accent (teal cyan)"></button>
+      <button class="accsw accsw--phosphor" type="button" data-accent="phosphor" title="Phosphor — terminal green" aria-label="Phosphor accent (terminal green)"></button>
+    </div>
+  </div>
+
 <script>
 (function () {
   "use strict";
@@ -482,6 +649,23 @@
     });
   }
   applyTheme(document.documentElement.getAttribute("data-theme") || "house");
+
+  /* ---------- accent picker (2nd axis, independent of lights) ----------
+     shares localStorage "poster-accent" with the home; default cobalt. */
+  var ACCENTS = ["signal", "ember", "cobalt", "ion", "phosphor"];
+  var accSwatches = Array.prototype.slice.call(document.querySelectorAll(".accsw"));
+  function applyAccent(name) {
+    if (ACCENTS.indexOf(name) === -1) name = "cobalt";
+    document.documentElement.setAttribute("data-accent", name);
+    try { localStorage.setItem("poster-accent", name); } catch (e) {}
+    accSwatches.forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-accent") === name ? "true" : "false");
+    });
+  }
+  accSwatches.forEach(function (b) {
+    b.addEventListener("click", function () { applyAccent(b.getAttribute("data-accent")); });
+  });
+  applyAccent(document.documentElement.getAttribute("data-accent") || "cobalt");
 
   /* ============================================================
      POSTS — real content ported faithfully from the source markdown
@@ -739,6 +923,12 @@
      ============================================================ */
   window.__post = {
     theme: function () { return document.documentElement.getAttribute("data-theme"); },
+    accent: function () { return document.documentElement.getAttribute("data-accent"); },
+    swatchCount: function () { return document.querySelectorAll(".accsw").length; },
+    clickAccent: function (name) {
+      var b = document.querySelector('.accsw[data-accent="' + name + '"]');
+      if (b) b.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    },
     slug: function () { return currentSlug(); },
     title: function () { return document.getElementById("postTitle").textContent; },
     termCount: function () { return document.querySelectorAll(".term").length; },

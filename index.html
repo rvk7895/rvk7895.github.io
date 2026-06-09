@@ -1749,7 +1749,8 @@
   </section>
 
   <!-- ===================== THE TICKET (floating) ===================== -->
-  <div class="ticket" id="ticket">
+  <!-- starts `held` (hidden) so it never flashes on load while the hero is on screen; gateTicket() reveals it on scroll -->
+  <div class="ticket held" id="ticket">
     <button class="ticket__btn" id="ticketBtn" type="button">
       <span class="play" aria-hidden="true">▶</span>
       <span id="ticketLabel">Watch the run</span>
